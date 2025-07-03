@@ -12,6 +12,8 @@ import site.kuril.domain.activity.model.valobj.SkuVO;
 import site.kuril.domain.activity.service.trial.node.RootNode;
 import site.kuril.types.design.framework.tree.StrategyHandler;
 
+import java.math.BigDecimal;
+
 @Service
 public class DefaultActivityStrategyFactory {
     private RootNode rootNode;
@@ -32,5 +34,6 @@ public class DefaultActivityStrategyFactory {
         private GroupBuyActivityDiscountVO groupBuyActivityDiscountVO;
         // 商品信息
         private SkuVO skuVO;
+        private BigDecimal deductionPrice;
     }
 }

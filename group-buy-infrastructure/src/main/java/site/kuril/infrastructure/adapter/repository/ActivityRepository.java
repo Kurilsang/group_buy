@@ -1,6 +1,7 @@
 package site.kuril.infrastructure.adapter.repository;
 
 import site.kuril.domain.activity.adapter.repository.IActivityRepository;
+import site.kuril.domain.activity.model.valobj.DiscountTypeEnum;
 import site.kuril.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
 import site.kuril.domain.activity.model.valobj.SkuVO;
 import site.kuril.infrastructure.dao.GroupBuyActivityDao;
@@ -39,7 +40,7 @@ public class ActivityRepository implements IActivityRepository {
         GroupBuyActivityDiscountVO.GroupBuyDiscount groupBuyDiscount = GroupBuyActivityDiscountVO.GroupBuyDiscount.builder()
                 .discountName(groupBuyDiscountRes.getDiscountName())
                 .discountDesc(groupBuyDiscountRes.getDiscountDesc())
-                .discountType(groupBuyDiscountRes.getDiscountType())
+                .discountType(DiscountTypeEnum.get(groupBuyDiscountRes.getDiscountType()))
                 .marketPlan(groupBuyDiscountRes.getMarketPlan())
                 .marketExpr(groupBuyDiscountRes.getMarketExpr())
                 .tagId(groupBuyDiscountRes.getTagId())
