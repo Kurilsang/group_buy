@@ -17,4 +17,6 @@ public interface GroupBuyActivityDao {
      * @return 拼团活动实体列表
      */
     List<GroupBuyActivity> queryGroupBuyActivityList();
+    GroupBuyActivity queryValidGroupBuyActivity(GroupBuyActivity groupBuyActivityReq);
+
 }

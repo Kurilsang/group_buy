@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="site.kuril.infrastructure.dao.GroupBuyActivityDao">
 
-    <resultMap id="GroupBuyActivityMap" type="site.kuril.infrastructure.dao.po.GroupBuyActivity">
+    <resultMap id="dataMap" type="site.kuril.infrastructure.dao.po.GroupBuyActivity">
         <!-- 主键映射 -->
         <id column="id" property="id"/>
 
@@ -26,7 +26,18 @@
     </resultMap>
 
     <!-- 查询所有拼团活动 -->
-    <select id="queryGroupBuyActivityList" resultMap="GroupBuyActivityMap">
+    <select id="queryGroupBuyActivityList" resultMap="dataMap">
         SELECT * FROM group_buy_activity
+    </select>
+
+    <select id="queryValidGroupBuyActivity" parameterType="site.kuril.infrastructure.dao.po.GroupBuyActivity" resultMap="dataMap">
+        select
+            activity_id, activity_name, source, channel, goods_id,
+            discount_id, group_type, take_limit_count, target, valid_time,
+            status, start_time, end_time, tag_id, tag_scope
+        from group_buy_activity
+        where source = #{source} and channel = #{channel}
+        order by id desc
+            limit 1
     </select>
 </mapper>

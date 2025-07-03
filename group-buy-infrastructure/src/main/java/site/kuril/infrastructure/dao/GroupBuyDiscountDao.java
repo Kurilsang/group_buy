@@ -16,4 +16,6 @@ public interface GroupBuyDiscountDao {
      * @return 拼团折扣实体列表
      */
     List<GroupBuyDiscount> queryGroupBuyDiscountList();
+    GroupBuyDiscount queryGroupBuyActivityDiscountByDiscountId(String discountId);
+
 }

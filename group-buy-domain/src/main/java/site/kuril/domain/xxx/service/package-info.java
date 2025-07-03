@@ -1,1 +1,0 @@
-package site.kuril.domain.xxx.service;
