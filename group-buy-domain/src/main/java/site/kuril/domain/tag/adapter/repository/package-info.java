@@ -1,0 +1,1 @@
+package site.kuril.domain.tag.adapter.repository;
