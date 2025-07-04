@@ -2,6 +2,7 @@ package site.kuril.types.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import site.kuril.types.enums.ResponseCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,6 +15,11 @@ public class AppException extends RuntimeException {
 
     /** 异常信息 */
     private String info;
+
+    public AppException(ResponseCode responseCode) {
+        this.code = responseCode.getCode();
+        this.info = responseCode.getInfo();
+    }
 
     public AppException(String code) {
         this.code = code;
