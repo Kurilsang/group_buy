@@ -15,6 +15,7 @@ import site.kuril.infrastructure.dao.po.GroupBuyDiscount;
 import site.kuril.infrastructure.dao.po.SCSkuActivity;
 import site.kuril.infrastructure.dao.po.Sku;
 import org.springframework.stereotype.Repository;
+import site.kuril.infrastructure.dcc.DCCService;
 import site.kuril.infrastructure.redis.IRedisService;
 
 import javax.annotation.Resource;
@@ -35,6 +36,9 @@ public class ActivityRepository implements IActivityRepository {
 
     @Resource
     private IRedisService redisService;
+
+    @Resource
+    private DCCService dccService;
 
     @Override
     public GroupBuyActivityDiscountVO queryGroupBuyActivityDiscountVO(Long activityId) {
@@ -113,5 +117,15 @@ public class ActivityRepository implements IActivityRepository {
         if (!bitSet.isExists()) return true;
         // 判断用户是否存在人群中
         return bitSet.get(redisService.getIndexFromUserId(userId));
+    }
+
+    @Override
+    public boolean downgradeSwitch() {
+        return dccService.isDowngradeSwitch();
+    }
+
+    @Override
+    public boolean cutRange(String userId) {
+        return dccService.isCutRange(userId);
     }
 }
