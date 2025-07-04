@@ -1,5 +1,6 @@
 package site.kuril.infrastructure.adapter.repository;
 
+import org.redisson.api.RBitSet;
 import site.kuril.domain.activity.adapter.repository.IActivityRepository;
 import site.kuril.domain.activity.model.valobj.DiscountTypeEnum;
 import site.kuril.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
@@ -14,6 +15,7 @@ import site.kuril.infrastructure.dao.po.GroupBuyDiscount;
 import site.kuril.infrastructure.dao.po.SCSkuActivity;
 import site.kuril.infrastructure.dao.po.Sku;
 import org.springframework.stereotype.Repository;
+import site.kuril.infrastructure.redis.IRedisService;
 
 import javax.annotation.Resource;
 
@@ -30,6 +32,9 @@ public class ActivityRepository implements IActivityRepository {
    private ISCSkuActivityDao skuActivityDao;
     @Resource
     private  ISkuDao skuDao;
+
+    @Resource
+    private IRedisService redisService;
 
     @Override
     public GroupBuyActivityDiscountVO queryGroupBuyActivityDiscountVO(Long activityId) {
@@ -100,5 +105,13 @@ public class ActivityRepository implements IActivityRepository {
                 .activityId(scSkuActivity.getActivityId())
                 .goodsId(scSkuActivity.getGoodsId())
                 .build();
+    }
+
+    @Override
+    public boolean isTagCrowdRange(String tagId, String userId) {
+        RBitSet bitSet = redisService.getBitSet(tagId);
+        if (!bitSet.isExists()) return true;
+        // 判断用户是否存在人群中
+        return bitSet.get(redisService.getIndexFromUserId(userId));
     }
 }
