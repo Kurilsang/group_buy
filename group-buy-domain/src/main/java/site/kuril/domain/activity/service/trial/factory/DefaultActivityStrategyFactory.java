@@ -35,6 +35,8 @@ public class DefaultActivityStrategyFactory {
         // 商品信息
         private SkuVO skuVO;
         private BigDecimal deductionPrice;
+        // 支付金额
+        private BigDecimal payPrice;
         // 活动可见性限制
         private boolean visible;
         // 活动

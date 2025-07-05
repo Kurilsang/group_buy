@@ -1,6 +1,7 @@
 package site.kuril.domain.trade.adapter.repository;
 
 import site.kuril.domain.trade.model.aggregate.GroupBuyOrderAggregate;
+import site.kuril.domain.trade.model.entity.GroupBuyActivityEntity;
 import site.kuril.domain.trade.model.entity.MarketPayOrderEntity;
 import site.kuril.domain.trade.model.valobj.GroupBuyProgressVO;
 
@@ -13,4 +14,7 @@ public interface ITradeRepository {
 
     GroupBuyProgressVO queryGroupBuyProgress(String teamId);
 
+    GroupBuyActivityEntity queryGroupBuyActivityEntityByActivityId(Long activityId);
+
+    Integer queryOrderCountByActivityId(Long activityId, String userId);
 }

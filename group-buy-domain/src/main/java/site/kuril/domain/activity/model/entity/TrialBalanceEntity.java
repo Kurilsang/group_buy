@@ -23,10 +23,13 @@ public class TrialBalanceEntity {
     private BigDecimal originalPrice;
     /** 折扣价格 */
     private BigDecimal deductionPrice;
+    /** 折扣价格 */
+    private BigDecimal payPrice;
     /** 拼团目标数量 */
     private Integer targetCount;
     /** 拼团开始时间 */
     private Date startTime;
+
     /** 拼团结束时间 */
     private Date endTime;
     /** 是否可见拼团 */

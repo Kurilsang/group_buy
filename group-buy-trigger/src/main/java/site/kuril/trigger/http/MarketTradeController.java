@@ -1,5 +1,6 @@
 package site.kuril.trigger.http;
 
+import org.springframework.web.bind.annotation.RequestMethod;
 import site.kuril.api.IMarketTradeService;
 import site.kuril.api.dto.LockMarketPayOrderRequestDTO;
 import site.kuril.api.dto.LockMarketPayOrderResponseDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 
@@ -38,7 +40,10 @@ public class MarketTradeController implements IMarketTradeService {
 
     @Resource
     private ITradeOrderService tradeOrderService;
-
+    /**
+     * 拼团营销锁单
+     */
+    @RequestMapping(value = "lock_market_pay_order", method = RequestMethod.POST)
     @Override
     public Response<LockMarketPayOrderResponseDTO> lockMarketPayOrder(LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO) {
         try {
@@ -50,6 +55,7 @@ public class MarketTradeController implements IMarketTradeService {
             Long activityId = lockMarketPayOrderRequestDTO.getActivityId();
             String outTradeNo = lockMarketPayOrderRequestDTO.getOutTradeNo();
             String teamId = lockMarketPayOrderRequestDTO.getTeamId();
+
 
             log.info("营销交易锁单:{} LockMarketPayOrderRequestDTO:{}", userId, JSON.toJSONString(lockMarketPayOrderRequestDTO));
 
@@ -118,6 +124,7 @@ public class MarketTradeController implements IMarketTradeService {
                             .goodsName(trialBalanceEntity.getGoodsName())
                             .originalPrice(trialBalanceEntity.getOriginalPrice())
                             .deductionPrice(trialBalanceEntity.getDeductionPrice())
+                            .payPrice(trialBalanceEntity.getPayPrice())
                             .outTradeNo(outTradeNo)
                             .build());
 
