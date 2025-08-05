@@ -5,10 +5,7 @@ import site.kuril.domain.trade.model.aggregate.GroupBuyOrderAggregate;
 import site.kuril.domain.trade.model.entity.*;
 import site.kuril.domain.trade.model.valobj.GroupBuyProgressVO;
 import site.kuril.domain.trade.model.valobj.TradeOrderStatusEnumVO;
-import site.kuril.infrastructure.dao.GroupBuyActivityDao;
-import site.kuril.infrastructure.dao.GroupBuyDiscountDao;
-import site.kuril.infrastructure.dao.IGroupBuyOrderDao;
-import site.kuril.infrastructure.dao.IGroupBuyOrderListDao;
+import site.kuril.infrastructure.dao.*;
 import site.kuril.infrastructure.dao.po.GroupBuyActivity;
 import site.kuril.infrastructure.dao.po.GroupBuyOrder;
 import site.kuril.infrastructure.dao.po.GroupBuyOrderList;
@@ -36,7 +33,8 @@ public class TradeRepository implements ITradeRepository {
     private IGroupBuyOrderListDao groupBuyOrderListDao;
     @Resource
     private GroupBuyActivityDao groupBuyActivityDao;
-
+    @Resource
+    private INotifyTaskDao notifyTaskDao;
 
     @Override
     public MarketPayOrderEntity queryMarketPayOrderEntityByOutTradeNo(String userId, String outTradeNo) {
