@@ -39,10 +39,14 @@ public class GroupBuyOrderList {
     private BigDecimal originalPrice;
     /** 折扣金额 */
     private BigDecimal deductionPrice;
+    /** 支付价格 */
+    private BigDecimal payPrice;
     /** 状态；0初始锁定、1消费完成 */
     private Integer status;
     /** 外部交易单号-确保外部调用唯一幂等 */
     private String outTradeNo;
+    /** 外部交易时间 */
+    private Date outTradeTime;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */

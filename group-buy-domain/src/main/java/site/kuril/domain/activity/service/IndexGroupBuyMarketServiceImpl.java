@@ -66,6 +66,6 @@ public class IndexGroupBuyMarketServiceImpl implements IIndexGroupBuyMarketServi
             log.error("拼团集市商品试算失败 - 客户ID: {}, 商品ID: {}, 异常信息: {}", 
                 customerId, goodsId, exception.getMessage(), exception);
             throw new Exception("商品试算处理失败: " + exception.getMessage(), exception);
-        }
+    }
     }
 }

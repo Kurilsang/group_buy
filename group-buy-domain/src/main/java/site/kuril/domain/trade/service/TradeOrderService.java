@@ -30,7 +30,7 @@ public class TradeOrderService implements ITradeOrderService {
 
     /** 交易规则过滤链 */
     @Resource
-    private BusinessLinkedList<TradeRuleCommandEntity, TradeRuleFilterFactory.DynamicContext, TradeRuleFilterBackEntity> businessRuleChain;
+    private BusinessLinkedList<TradeLockRuleCommandEntity, TradeRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> businessRuleChain;
 
     /**
      * 根据外部交易号查询未支付的营销订单
@@ -106,7 +106,7 @@ public class TradeOrderService implements ITradeOrderService {
         
         try {
             // 第一步：执行交易规则过滤检查
-            TradeRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId);
+            TradeLockRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId);
             
             // 第二步：获取用户参与次数信息（用于数据库唯一索引约束）
             Integer participationCount = extractUserParticipationCount(riskControlResult);
@@ -135,8 +135,8 @@ public class TradeOrderService implements ITradeOrderService {
      * @return 规则过滤结果
      * @throws Exception 当规则验证失败时抛出异常
      */
-    private TradeRuleFilterBackEntity executeTradeRuleValidation(String customerId, Long activityId) throws Exception {
-        TradeRuleCommandEntity ruleCommand = TradeRuleCommandEntity.builder()
+    private TradeLockRuleFilterBackEntity executeTradeRuleValidation(String customerId, Long activityId) throws Exception {
+        TradeLockRuleCommandEntity ruleCommand = TradeLockRuleCommandEntity.builder()
                 .activityId(activityId)
                 .userId(customerId)
                 .build();
@@ -152,7 +152,7 @@ public class TradeOrderService implements ITradeOrderService {
      * @param filterResult 规则过滤结果
      * @return 用户参与次数
      */
-    private Integer extractUserParticipationCount(TradeRuleFilterBackEntity filterResult) {
+    private Integer extractUserParticipationCount(TradeLockRuleFilterBackEntity filterResult) {
         return filterResult.getUserTakeOrderCount();
     }
 

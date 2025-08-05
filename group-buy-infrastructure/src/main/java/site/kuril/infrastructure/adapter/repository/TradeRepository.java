@@ -2,6 +2,7 @@ package site.kuril.infrastructure.adapter.repository;
 
 import site.kuril.domain.trade.adapter.repository.ITradeRepository;
 import site.kuril.domain.trade.model.aggregate.GroupBuyOrderAggregate;
+import site.kuril.domain.trade.model.aggregate.GroupBuyTeamSettlementAggregate;
 import site.kuril.domain.trade.model.entity.*;
 import site.kuril.domain.trade.model.valobj.GroupBuyProgressVO;
 import site.kuril.domain.trade.model.valobj.TradeOrderStatusEnumVO;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 
 @Slf4j
@@ -46,6 +48,7 @@ public class TradeRepository implements ITradeRepository {
 
         return MarketPayOrderEntity.builder()
                 .orderId(groupBuyOrderListRes.getOrderId())
+                .teamId(groupBuyOrderListRes.getTeamId())
                 .deductionPrice(groupBuyOrderListRes.getDeductionPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.valueOf(groupBuyOrderListRes.getStatus()))
                 .build();
@@ -67,6 +70,10 @@ public class TradeRepository implements ITradeRepository {
             // 使用 RandomStringUtils.randomNumeric 替代公司里使用的雪花算法UUID
             teamId = RandomStringUtils.randomNumeric(8);
 
+            // 计算拼团有效时间
+            Date validStartTime = new Date(); // 拼团开始时间为当前时间
+            Date validEndTime = new Date(validStartTime.getTime() + (payActivityEntity.getValidTime() * 60 * 1000L)); // 结束时间 = 开始时间 + validTime分钟
+
             // 构建拼团订单
             GroupBuyOrder groupBuyOrder = GroupBuyOrder.builder()
                     .teamId(teamId)
@@ -79,6 +86,8 @@ public class TradeRepository implements ITradeRepository {
                     .targetCount(payActivityEntity.getTargetCount())
                     .completeCount(0)
                     .lockCount(1)
+                    .validStartTime(validStartTime)
+                    .validEndTime(validEndTime)
                     .build();
 
             // 写入记录
@@ -105,6 +114,7 @@ public class TradeRepository implements ITradeRepository {
                 .channel(payDiscountEntity.getChannel())
                 .originalPrice(payDiscountEntity.getOriginalPrice())
                 .deductionPrice(payDiscountEntity.getDeductionPrice())
+                .payPrice(payDiscountEntity.getPayPrice())
                 .status(TradeOrderStatusEnumVO.CREATE.getCode())
                 .outTradeNo(payDiscountEntity.getOutTradeNo())
                 .bizId(payActivityEntity.getActivityId()+ Constants.UNDERLINE+userEntity.getUserId()+Constants.UNDERLINE+
@@ -120,6 +130,7 @@ public class TradeRepository implements ITradeRepository {
 
         return MarketPayOrderEntity.builder()
                 .orderId(orderId)
+                .teamId(teamId)
                 .deductionPrice(payDiscountEntity.getDeductionPrice())
                 .tradeOrderStatusEnumVO(TradeOrderStatusEnumVO.CREATE)
                 .build();
@@ -162,4 +173,51 @@ public class TradeRepository implements ITradeRepository {
         groupBuyOrderListReq.setUserId(userId);
         return groupBuyOrderListDao.queryOrderCountByActivityId(groupBuyOrderListReq);
     }
+
+    @Override
+    public boolean isSCBlackIntercept(String source, String channel) {
+        // TODO: 实现SC渠道黑名单检查逻辑
+        // 这里需要查询DCC配置或黑名单表，暂时返回false表示不拦截
+        log.debug("检查SC渠道黑名单 - source: {}, channel: {}", source, channel);
+        return false;
+    }
+
+    @Override
+    public GroupBuyTeamEntity queryGroupBuyTeamByTeamId(String teamId) {
+        GroupBuyOrder groupBuyOrder = groupBuyOrderDao.queryGroupBuyProgress(teamId);
+        if (null == groupBuyOrder) return null;
+        
+        return GroupBuyTeamEntity.builder()
+                .teamId(groupBuyOrder.getTeamId())
+                .activityId(groupBuyOrder.getActivityId())
+                .targetCount(groupBuyOrder.getTargetCount())
+                .completeCount(groupBuyOrder.getCompleteCount())
+                .lockCount(groupBuyOrder.getLockCount())
+                .status(groupBuyOrder.getStatus())
+                .validStartTime(groupBuyOrder.getValidStartTime())
+                .validEndTime(groupBuyOrder.getValidEndTime())
+                .build();
+    }
+
+    @Override
+    public void settlementMarketPayOrder(GroupBuyTeamSettlementAggregate groupBuyTeamSettlementAggregate) {
+        UserEntity userEntity = groupBuyTeamSettlementAggregate.getUserEntity();
+        TradePaySuccessEntity tradePaySuccessEntity = groupBuyTeamSettlementAggregate.getTradePaySuccessEntity();
+        
+        log.info("执行拼团交易结算 - 用户ID: {}, 外部交易号: {}", 
+            userEntity.getUserId(), tradePaySuccessEntity.getOutTradeNo());
+        
+        // 更新订单状态为完成，并记录交易时间
+        GroupBuyOrderList updateOrderList = new GroupBuyOrderList();
+        updateOrderList.setUserId(userEntity.getUserId());
+        updateOrderList.setOutTradeNo(tradePaySuccessEntity.getOutTradeNo());
+        updateOrderList.setStatus(TradeOrderStatusEnumVO.COMPLETE.getCode());
+        updateOrderList.setOutTradeTime(tradePaySuccessEntity.getOutTradeTime());
+        
+        groupBuyOrderListDao.updateOrderStatus2COMPLETE(updateOrderList);
+        
+        log.info("拼团交易结算完成 - 用户ID: {}, 外部交易号: {}", 
+            userEntity.getUserId(), tradePaySuccessEntity.getOutTradeNo());
+    }
+
 }

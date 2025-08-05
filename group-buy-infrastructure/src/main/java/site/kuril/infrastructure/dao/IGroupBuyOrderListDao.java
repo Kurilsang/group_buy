@@ -12,4 +12,12 @@ public interface IGroupBuyOrderListDao {
     GroupBuyOrderList queryGroupBuyOrderRecordByOutTradeNo(GroupBuyOrderList groupBuyOrderListReq);
 
     Integer queryOrderCountByActivityId(GroupBuyOrderList groupBuyOrderListReq);
+    
+    /**
+     * 更新订单状态为完成
+     * 
+     * @param groupBuyOrderList 包含userId, outTradeNo, status, outTradeTime的订单信息
+     */
+    void updateOrderStatus2COMPLETE(GroupBuyOrderList groupBuyOrderList);
+
 }
