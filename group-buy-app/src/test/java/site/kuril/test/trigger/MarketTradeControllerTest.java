@@ -1,19 +1,17 @@
 package site.kuril.test.trigger;
 
-import site.kuril.api.IMarketTradeService;
-import site.kuril.api.dto.LockMarketPayOrderRequestDTO;
-import site.kuril.api.dto.LockMarketPayOrderResponseDTO;
-import site.kuril.api.response.Response;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import site.kuril.api.IMarketTradeService;
+import site.kuril.api.dto.LockMarketPayOrderRequestDTO;
+import site.kuril.api.dto.LockMarketPayOrderResponseDTO;
+import site.kuril.api.response.Response;
 
 import javax.annotation.Resource;
-
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -24,35 +22,34 @@ public class MarketTradeControllerTest {
     private IMarketTradeService marketTradeService;
 
     @Test
-    public void test_lockMarketPayOrder() {
+    public void test_lockMarketPayOrder() throws InterruptedException {
         LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("xiaofuge");
-        lockMarketPayOrderRequestDTO.setTeamId(null);
+        lockMarketPayOrderRequestDTO.setUserId("test_user");
         lockMarketPayOrderRequestDTO.setActivityId(100123L);
         lockMarketPayOrderRequestDTO.setGoodsId("9890001");
         lockMarketPayOrderRequestDTO.setSource("s01");
         lockMarketPayOrderRequestDTO.setChannel("c01");
-        lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
-
-        Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeService.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
-
-        log.info("测试结果 req:{} res:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
-    }
-
-    @Test
-    public void test_lockMarketPayOrder_teamId_not_null() {
-        LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO = new LockMarketPayOrderRequestDTO();
-        lockMarketPayOrderRequestDTO.setUserId("xiaofuge");
+        lockMarketPayOrderRequestDTO.setOutTradeNo("190684113109");
         lockMarketPayOrderRequestDTO.setTeamId("96876129");
-        lockMarketPayOrderRequestDTO.setActivityId(100123L);
-        lockMarketPayOrderRequestDTO.setGoodsId("9890001");
-        lockMarketPayOrderRequestDTO.setSource("s01");
-        lockMarketPayOrderRequestDTO.setChannel("c01");
-        lockMarketPayOrderRequestDTO.setOutTradeNo(RandomStringUtils.randomNumeric(12));
 
-        Response<LockMarketPayOrderResponseDTO> lockMarketPayOrderResponseDTOResponse = marketTradeService.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
+        Response<LockMarketPayOrderResponseDTO> response = marketTradeService.lockMarketPayOrder(lockMarketPayOrderRequestDTO);
+        log.info("请求参数：{}", JSON.toJSONString(lockMarketPayOrderRequestDTO));
+        log.info("测试结果：{}", JSON.toJSONString(response));
 
-        log.info("测试结果 req:{} res:{}", JSON.toJSONString(lockMarketPayOrderRequestDTO), JSON.toJSONString(lockMarketPayOrderResponseDTOResponse));
+        LockMarketPayOrderRequestDTO lockMarketPayOrderRequestDTO1 = new LockMarketPayOrderRequestDTO();
+        lockMarketPayOrderRequestDTO1.setUserId("test_user");
+        lockMarketPayOrderRequestDTO1.setActivityId(100123L);
+        lockMarketPayOrderRequestDTO1.setGoodsId("9890001");
+        lockMarketPayOrderRequestDTO1.setSource("s01");
+        lockMarketPayOrderRequestDTO1.setChannel("c01");
+        lockMarketPayOrderRequestDTO1.setOutTradeNo("190684113110");
+        lockMarketPayOrderRequestDTO1.setTeamId("96876129");
+
+        Response<LockMarketPayOrderResponseDTO> response1 = marketTradeService.lockMarketPayOrder(lockMarketPayOrderRequestDTO1);
+        log.info("请求参数：{}", JSON.toJSONString(lockMarketPayOrderRequestDTO1));
+        log.info("测试结果：{}", JSON.toJSONString(response1));
+
+        Thread.sleep(Integer.MAX_VALUE);
     }
 
 }

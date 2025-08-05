@@ -6,9 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Fuzhengwei bugstack.cn @小傅哥
- * @description 拼团交易，过滤反馈实体
- * @create 2025-01-25 14:16
+ * @description 交易规则过滤返回实体
+ * @create 2024-07-13 10:24
  */
 @Data
 @Builder
