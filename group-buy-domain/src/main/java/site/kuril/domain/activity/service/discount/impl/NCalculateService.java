@@ -12,10 +12,6 @@ import java.math.BigDecimal;
  * <p>
  * 实现固定金额购买的折扣计算逻辑，即N元购活动
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service("N")

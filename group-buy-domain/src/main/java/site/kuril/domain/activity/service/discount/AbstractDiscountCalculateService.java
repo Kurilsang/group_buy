@@ -16,10 +16,6 @@ import java.math.BigDecimal;
  * - 折扣计算模板方法
  * - 子类需实现具体的折扣计算算法
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 public abstract class AbstractDiscountCalculateService implements IDiscountCalculateService {

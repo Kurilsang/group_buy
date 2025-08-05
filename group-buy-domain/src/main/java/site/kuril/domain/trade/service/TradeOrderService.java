@@ -19,10 +19,6 @@ import javax.annotation.Resource;
  * - 拼团进度追踪
  * - 营销订单锁定与风控过滤
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service

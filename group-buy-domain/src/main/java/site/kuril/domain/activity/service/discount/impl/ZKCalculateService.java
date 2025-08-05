@@ -16,10 +16,6 @@ import java.math.RoundingMode;
  * - 最低支付金额保护
  * - 精确的小数处理
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service("ZK")

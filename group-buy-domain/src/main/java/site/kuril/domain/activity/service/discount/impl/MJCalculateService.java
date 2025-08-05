@@ -16,10 +16,6 @@ import java.math.BigDecimal;
  * - 不满足条件时返回原价
  * - 最低支付金额保护
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service("MJ")

@@ -14,10 +14,6 @@ import javax.annotation.Resource;
  * <p>
  * 提供拼团商品的试算和展示功能，通过策略模式支持不同类型的活动处理
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service

@@ -14,10 +14,6 @@ import java.math.BigDecimal;
  * - 无条件直接减免指定金额
  * - 最低支付金额保护
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Slf4j
 @Service("ZJ")

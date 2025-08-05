@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
  * <p>
  * 表示系统中的用户基本信息，用于业务处理中的用户标识
  * </p>
- * 
- * @author system
- * @version 1.0
- * @since 2024-01-01
  */
 @Data
 @Builder

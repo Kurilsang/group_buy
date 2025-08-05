@@ -3,6 +3,5 @@
  * model2 为多实例链
  *
  * @description 通用设计模板；责任链
- * @create 2024-12-14 12:04
  */
 package site.kuril.types.design.framework.link;
