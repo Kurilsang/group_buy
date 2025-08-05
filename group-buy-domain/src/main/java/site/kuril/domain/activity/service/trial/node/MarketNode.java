@@ -18,7 +18,6 @@ import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
 
 import javax.annotation.Resource;
-import javax.xml.ws.Response;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.*;
