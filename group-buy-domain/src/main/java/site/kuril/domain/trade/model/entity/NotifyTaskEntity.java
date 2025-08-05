@@ -1,4 +1,4 @@
-package site.kuril.infrastructure.dao.po;
+package site.kuril.domain.trade.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 回调通知任务PO
+ * 回调通知任务实体
+ * <p>
+ * 表示拼团完成后的回调通知任务信息
+ * </p>
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotifyTask {
+public class NotifyTaskEntity {
 
-    /** 自增ID */
-    private Long id;
     /** 活动ID */
     private Long activityId;
     /** 拼单组队ID */
@@ -35,4 +36,4 @@ public class NotifyTask {
     /** 更新时间 */
     private Date updateTime;
 
-}
+} 

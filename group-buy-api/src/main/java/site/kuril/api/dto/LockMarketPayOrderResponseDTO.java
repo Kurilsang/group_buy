@@ -16,6 +16,8 @@ public class LockMarketPayOrderResponseDTO {
 
     /** 预购订单ID */
     private String orderId;
+    /** 拼团队伍ID */
+    private String teamId;
     /** 折扣金额 */
     private BigDecimal deductionPrice;
     /** 交易订单状态 */

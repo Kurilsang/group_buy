@@ -52,8 +52,8 @@ public class TradeOrderService implements ITradeOrderService {
             log.info("发现未支付营销订单 - 客户ID: {}, 订单ID: {}", customerId, unpaidOrder.getOrderId());
         } else {
             log.debug("未发现重复的未支付订单 - 客户ID: {}, 外部交易号: {}", customerId, externalTradeNo);
-        }
-        
+    }
+
         return unpaidOrder;
     }
 
@@ -107,10 +107,10 @@ public class TradeOrderService implements ITradeOrderService {
         try {
             // 第一步：执行交易规则过滤检查
             TradeLockRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId);
-            
+
             // 第二步：获取用户参与次数信息（用于数据库唯一索引约束）
             Integer participationCount = extractUserParticipationCount(riskControlResult);
-            
+
             // 第三步：构建业务聚合对象
             GroupBuyOrderAggregate orderAggregate = buildOrderAggregate(customerInfo, activityInfo, discountInfo, participationCount);
             
@@ -140,7 +140,7 @@ public class TradeOrderService implements ITradeOrderService {
                 .activityId(activityId)
                 .userId(customerId)
                 .build();
-        
+
         TradeRuleFilterFactory.DynamicContext filterContext = new TradeRuleFilterFactory.DynamicContext();
         
         return businessRuleChain.apply(ruleCommand, filterContext);

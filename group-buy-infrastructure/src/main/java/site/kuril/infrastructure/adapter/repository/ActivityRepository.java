@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 @Repository
 public class ActivityRepository implements IActivityRepository {
 
-   @Resource
+    @Resource
     private GroupBuyActivityDao groupBuyActivityDao;
    @Resource
     private GroupBuyDiscountDao groupBuyDiscountDao;
