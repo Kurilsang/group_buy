@@ -66,6 +66,7 @@ public class TradeRepository implements ITradeRepository {
         UserEntity userEntity = groupBuyOrderAggregate.getUserEntity();
         PayActivityEntity payActivityEntity = groupBuyOrderAggregate.getPayActivityEntity();
         PayDiscountEntity payDiscountEntity = groupBuyOrderAggregate.getPayDiscountEntity();
+        site.kuril.domain.trade.model.valobj.NotifyConfigVO notifyConfigVO = payDiscountEntity.getNotifyConfigVO();
         Integer userTakeOrderCount = groupBuyOrderAggregate.getUserTakeOrderCount();
 
 
@@ -93,6 +94,7 @@ public class TradeRepository implements ITradeRepository {
                     .lockCount(1)
                     .validStartTime(validStartTime)
                     .validEndTime(validEndTime)
+                    .notifyType(notifyConfigVO.getNotifyType().getCode())
                     .notifyUrl(payDiscountEntity.getNotifyUrl())
                     .build();
 
@@ -120,6 +122,7 @@ public class TradeRepository implements ITradeRepository {
                 .channel(payDiscountEntity.getChannel())
                 .originalPrice(payDiscountEntity.getOriginalPrice())
                 .deductionPrice(payDiscountEntity.getDeductionPrice())
+                .payPrice(payDiscountEntity.getPayPrice())
                 .status(TradeOrderStatusEnumVO.CREATE.getCode())
                 .outTradeNo(payDiscountEntity.getOutTradeNo())
                 .outTradeTime(null) // 锁单阶段还没有外部交易时间
@@ -223,14 +226,21 @@ public class TradeRepository implements ITradeRepository {
                 .validStartTime(groupBuyOrder.getValidStartTime())
                 .validEndTime(groupBuyOrder.getValidEndTime())
                 .notifyUrl(groupBuyOrder.getNotifyUrl())
+                .notifyConfigVO(site.kuril.domain.trade.model.valobj.NotifyConfigVO.builder()
+                        .notifyType(site.kuril.types.enums.NotifyTypeEnumVO.fromCode(groupBuyOrder.getNotifyType()))
+                        .notifyUrl(groupBuyOrder.getNotifyUrl())
+                        // MQ 是固定的
+                        .notifyMQ("topic.team_success")
+                        .build())
                 .build();
     }
 
     @Transactional(timeout = 500)
     @Override
-    public void settlementMarketPayOrder(GroupBuyTeamSettlementAggregate groupBuyTeamSettlementAggregate) {
+    public NotifyTaskEntity settlementMarketPayOrder(GroupBuyTeamSettlementAggregate groupBuyTeamSettlementAggregate) {
         UserEntity userEntity = groupBuyTeamSettlementAggregate.getUserEntity();
         GroupBuyTeamEntity groupBuyTeamEntity = groupBuyTeamSettlementAggregate.getGroupBuyTeamEntity();
+        site.kuril.domain.trade.model.valobj.NotifyConfigVO notifyConfigVO = groupBuyTeamEntity.getNotifyConfigVO();
         TradePaySuccessEntity tradePaySuccessEntity = groupBuyTeamSettlementAggregate.getTradePaySuccessEntity();
         
         log.info("执行拼团交易结算 - 用户ID: {}, 外部交易号: {}", 
@@ -268,7 +278,9 @@ public class TradeRepository implements ITradeRepository {
             NotifyTask notifyTask = new NotifyTask();
             notifyTask.setActivityId(groupBuyTeamEntity.getActivityId());
             notifyTask.setTeamId(groupBuyTeamEntity.getTeamId());
-            notifyTask.setNotifyUrl(groupBuyTeamEntity.getNotifyUrl());
+            notifyTask.setNotifyType(notifyConfigVO.getNotifyType().getCode());
+            notifyTask.setNotifyMQ(site.kuril.types.enums.NotifyTypeEnumVO.MQ.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyMQ() : null);
+            notifyTask.setNotifyUrl(site.kuril.types.enums.NotifyTypeEnumVO.HTTP.equals(notifyConfigVO.getNotifyType()) ? notifyConfigVO.getNotifyUrl() : null);
             notifyTask.setNotifyCount(0);
             notifyTask.setNotifyStatus(0);
             
@@ -279,12 +291,24 @@ public class TradeRepository implements ITradeRepository {
             
             notifyTaskDao.insert(notifyTask);
             
-            log.info("拼团完成，创建回调任务 - 团队ID: {}, 回调地址: {}", 
-                groupBuyTeamEntity.getTeamId(), groupBuyTeamEntity.getNotifyUrl());
+            log.info("拼团完成，创建回调任务 - 团队ID: {}, 回调类型: {}, 回调地址: {}", 
+                groupBuyTeamEntity.getTeamId(), notifyTask.getNotifyType(), 
+                notifyTask.getNotifyUrl() != null ? notifyTask.getNotifyUrl() : notifyTask.getNotifyMQ());
+            
+            return NotifyTaskEntity.builder()
+                    .teamId(notifyTask.getTeamId())
+                    .notifyType(notifyTask.getNotifyType())
+                    .notifyMQ(notifyTask.getNotifyMQ())
+                    .notifyUrl(notifyTask.getNotifyUrl())
+                    .notifyCount(notifyTask.getNotifyCount())
+                    .parameterJson(notifyTask.getParameterJson())
+                    .build();
         }
         
         log.info("拼团交易结算完成 - 用户ID: {}, 外部交易号: {}", 
             userEntity.getUserId(), tradePaySuccessEntity.getOutTradeNo());
+        
+        return null;
     }
 
     @Override
@@ -293,6 +317,8 @@ public class TradeRepository implements ITradeRepository {
         return notifyTaskList.stream().map(notifyTask -> NotifyTaskEntity.builder()
                 .activityId(notifyTask.getActivityId())
                 .teamId(notifyTask.getTeamId())
+                .notifyType(notifyTask.getNotifyType())
+                .notifyMQ(notifyTask.getNotifyMQ())
                 .notifyUrl(notifyTask.getNotifyUrl())
                 .notifyCount(notifyTask.getNotifyCount())
                 .notifyStatus(notifyTask.getNotifyStatus())
@@ -308,6 +334,8 @@ public class TradeRepository implements ITradeRepository {
         return notifyTaskList.stream().map(notifyTask -> NotifyTaskEntity.builder()
                 .activityId(notifyTask.getActivityId())
                 .teamId(notifyTask.getTeamId())
+                .notifyType(notifyTask.getNotifyType())
+                .notifyMQ(notifyTask.getNotifyMQ())
                 .notifyUrl(notifyTask.getNotifyUrl())
                 .notifyCount(notifyTask.getNotifyCount())
                 .notifyStatus(notifyTask.getNotifyStatus())

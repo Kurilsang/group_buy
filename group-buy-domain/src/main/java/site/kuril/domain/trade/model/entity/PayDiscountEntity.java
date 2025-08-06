@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.kuril.domain.trade.model.valobj.NotifyConfigVO;
 
 import java.math.BigDecimal;
 
@@ -32,5 +33,7 @@ public class PayDiscountEntity {
     private String outTradeNo;
     /** 回调通知地址 */
     private String notifyUrl;
+    /** 通知配置 */
+    private NotifyConfigVO notifyConfigVO;
 
 }

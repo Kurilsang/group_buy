@@ -49,8 +49,9 @@ public interface ITradeRepository {
      * 结算营销支付订单
      * 
      * @param groupBuyTeamSettlementAggregate 拼团队伍结算聚合
+     * @return 创建的回调任务实体，如果拼团未完成则返回null
      */
-    void settlementMarketPayOrder(GroupBuyTeamSettlementAggregate groupBuyTeamSettlementAggregate);
+    NotifyTaskEntity settlementMarketPayOrder(GroupBuyTeamSettlementAggregate groupBuyTeamSettlementAggregate);
 
     /**
      * 查询未执行的回调任务列表

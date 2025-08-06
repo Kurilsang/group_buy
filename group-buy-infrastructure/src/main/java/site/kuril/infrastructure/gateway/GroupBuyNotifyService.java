@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
-import site.kuril.domain.trade.adapter.port.ITradePort;
 import site.kuril.domain.trade.model.entity.NotifyTaskEntity;
 import site.kuril.types.enums.NotifyTaskHTTPEnumVO;
 import site.kuril.types.enums.ResponseCode;
@@ -20,12 +19,11 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Service
-public class GroupBuyNotifyService implements ITradePort {
+public class GroupBuyNotifyService {
 
     @Resource
     private OkHttpClient okHttpClient;
 
-    @Override
     public String groupBuyNotify(NotifyTaskEntity notifyTask) throws Exception {
         String apiUrl = notifyTask.getNotifyUrl();
         String parameterJson = notifyTask.getParameterJson();

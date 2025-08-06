@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import site.kuril.domain.trade.model.valobj.NotifyConfigVO;
 
 import java.util.Date;
 
@@ -37,5 +38,7 @@ public class TradeSettlementRuleFilterBackEntity {
     private Date validEndTime;
     /** 回调通知地址 */
     private String notifyUrl;
+    /** 回调配置 */
+    private NotifyConfigVO notifyConfigVO;
 
 } 

@@ -114,6 +114,31 @@ public class MarketTradeController implements IMarketTradeService {
 
             GroupBuyActivityDiscountVO groupBuyActivityDiscountVO = trialBalanceEntity.getGroupBuyActivityDiscountVO();
 
+            // 获取通知配置
+            site.kuril.api.dto.NotifyConfigVO notifyConfigVO = requestDTO.getNotifyConfigVO();
+            
+            log.info("锁单通知配置检查 - userId: {}, notifyUrl: [{}], notifyConfigVO: {}", 
+                userId, notifyUrl, notifyConfigVO != null ? "已配置" : "未配置");
+            
+            if (notifyConfigVO == null) {
+                // 根据是否有notifyUrl来决定通知方式
+                // 加强空值判断：null、空字符串、"null"字符串都视为无URL
+                if (StringUtils.isNotBlank(notifyUrl) && !"null".equalsIgnoreCase(notifyUrl)) {
+                    // 有有效notifyUrl，使用HTTP通知
+                    log.info("使用HTTP通知 - notifyUrl: {}", notifyUrl);
+                    notifyConfigVO = site.kuril.api.dto.NotifyConfigVO.builder()
+                            .notifyType("HTTP")
+                            .notifyUrl(notifyUrl)
+                            .build();
+                } else {
+                    // 无有效notifyUrl，使用MQ通知
+                    log.info("使用MQ通知 - notifyUrl为空或无效: [{}]", notifyUrl);
+                    notifyConfigVO = site.kuril.api.dto.NotifyConfigVO.builder()
+                            .notifyType("MQ")
+                            .build();
+                }
+            }
+
             // 锁单
             marketPayOrderEntity = tradeOrderService.lockMarketPayOrder(
                     UserEntity.builder().userId(userId).build(),
@@ -136,6 +161,12 @@ public class MarketTradeController implements IMarketTradeService {
                             .payPrice(trialBalanceEntity.getPayPrice())
                             .outTradeNo(outTradeNo)
                             .notifyUrl(notifyUrl)
+                            .notifyConfigVO(notifyConfigVO != null ? 
+                                    site.kuril.domain.trade.model.valobj.NotifyConfigVO.builder()
+                                            .notifyType(site.kuril.types.enums.NotifyTypeEnumVO.fromCode(notifyConfigVO.getNotifyType()))
+                                            .notifyMQ(notifyConfigVO.getNotifyMQ())
+                                            .notifyUrl(notifyConfigVO.getNotifyUrl())
+                                            .build() : null)
                             .build());
 
             log.info("交易锁单记录(新):{} marketPayOrderEntity:{}", userId, JSON.toJSONString(marketPayOrderEntity));

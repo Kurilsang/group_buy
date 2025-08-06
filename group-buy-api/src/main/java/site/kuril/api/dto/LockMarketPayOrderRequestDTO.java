@@ -22,13 +22,23 @@ public class LockMarketPayOrderRequestDTO {
     private String outTradeNo;
     // 回调通知地址
     private String notifyUrl;
+    // 回调配置
+    private NotifyConfigVO notifyConfigVO;
 
-    public String getNotifyUrl() {
-        return notifyUrl;
+    // 兼容配置
+    public void setNotifyUrl(String url) {
+        this.notifyUrl = url;
+        NotifyConfigVO notifyConfigVO = new NotifyConfigVO();
+        notifyConfigVO.setNotifyType("HTTP");
+        notifyConfigVO.setNotifyUrl(url);
+        this.notifyConfigVO = notifyConfigVO;
     }
-
-    public void setNotifyUrl(String notifyUrl) {
-        this.notifyUrl = notifyUrl;
+    
+    // 兼容配置 - MQ不需要指定，系统会发统一MQ消息
+    public void setNotifyMQ() {
+        NotifyConfigVO notifyConfigVO = new NotifyConfigVO();
+        notifyConfigVO.setNotifyType("MQ");
+        this.notifyConfigVO = notifyConfigVO;
     }
 
 }

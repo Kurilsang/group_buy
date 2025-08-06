@@ -89,6 +89,10 @@
             <artifactId>group-buy-infrastructure</artifactId>
         </dependency>
         <dependency>
+            <groupId>site.kuril</groupId>
+            <artifactId>group-buy-types</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
             <version>3.26.0</version>
@@ -129,7 +133,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                     <testFailureIgnore>false</testFailureIgnore>
                     <includes>
                         <include>**/*Test.java</include>

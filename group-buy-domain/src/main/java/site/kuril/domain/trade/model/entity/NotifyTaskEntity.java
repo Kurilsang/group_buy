@@ -23,6 +23,10 @@ public class NotifyTaskEntity {
     private Long activityId;
     /** 拼单组队ID */
     private String teamId;
+    /** 回调类型（HTTP、MQ） */
+    private String notifyType;
+    /** 回调消息 */
+    private String notifyMQ;
     /** 回调接口 */
     private String notifyUrl;
     /** 回调次数 */
@@ -35,5 +39,13 @@ public class NotifyTaskEntity {
     private Date createTime;
     /** 更新时间 */
     private Date updateTime;
+    
+    /**
+     * 获取分布式锁的key
+     * @return 锁key
+     */
+    public String lockKey() {
+        return "notify_task_lock_" + teamId;
+    }
 
 } 

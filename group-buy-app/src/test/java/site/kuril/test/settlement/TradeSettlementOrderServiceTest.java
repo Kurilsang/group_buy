@@ -15,6 +15,7 @@ import site.kuril.types.exception.AppException;
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 交易结算订单服务测试
@@ -32,8 +33,8 @@ public class TradeSettlementOrderServiceTest {
         TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
         tradePaySuccessEntity.setSource("s01");
         tradePaySuccessEntity.setChannel("c01");
-        tradePaySuccessEntity.setUserId("123");
-        tradePaySuccessEntity.setOutTradeNo("531310409914");
+        tradePaySuccessEntity.setUserId("user002");
+        tradePaySuccessEntity.setOutTradeNo("742471786436");
         tradePaySuccessEntity.setOutTradeTime(new Date());
         
         TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementOrderService.settlementMarketPayOrder(tradePaySuccessEntity);
@@ -169,6 +170,54 @@ public class TradeSettlementOrderServiceTest {
         }
         
         log.info("请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
+    }
+
+    @Test
+    public void test_settlementMarketPayOrder_mq() throws Exception {
+        // 使用user001的MQ锁单记录进行结算测试
+        TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
+        tradePaySuccessEntity.setSource("s01");
+        tradePaySuccessEntity.setChannel("c01");
+        tradePaySuccessEntity.setUserId("user001");
+        tradePaySuccessEntity.setOutTradeNo("264705424092"); // 从锁单测试中获取
+        tradePaySuccessEntity.setOutTradeTime(new Date());
+        
+        TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementOrderService.settlementMarketPayOrder(tradePaySuccessEntity);
+        
+        log.info("MQ结算测试 - 请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
+        log.info("MQ结算测试 - 测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));
+
+        // 暂停等待异步MQ消息处理完成
+        Thread.sleep(5000);
+    }
+
+    @Test
+    public void test_settlementMarketPayOrder_http() throws Exception {
+        // 使用user002的HTTP锁单记录进行结算测试
+        TradePaySuccessEntity tradePaySuccessEntity = new TradePaySuccessEntity();
+        tradePaySuccessEntity.setSource("s01");
+        tradePaySuccessEntity.setChannel("c01");
+        tradePaySuccessEntity.setUserId("user002");
+        tradePaySuccessEntity.setOutTradeNo("826795838332"); // 从锁单测试中获取
+        tradePaySuccessEntity.setOutTradeTime(new Date());
+        
+        TradePaySettlementEntity tradePaySettlementEntity = tradeSettlementOrderService.settlementMarketPayOrder(tradePaySuccessEntity);
+        
+        log.info("HTTP结算测试 - 请求参数:{}", JSON.toJSONString(tradePaySuccessEntity));
+        log.info("HTTP结算测试 - 测试结果:{}", JSON.toJSONString(tradePaySettlementEntity));
+
+        // 暂停等待异步HTTP回调处理完成
+        Thread.sleep(5000);
+    }
+
+    @Test
+    public void test_execSettlementNotifyJob() throws Exception {
+        log.info("测试定时任务补偿机制");
+        
+        // 执行定时任务，处理所有未完成的回调任务
+        java.util.Map<String, Integer> result = tradeSettlementOrderService.execSettlementNotifyJob();
+        
+        log.info("定时任务执行结果:{}", JSON.toJSONString(result));
     }
 
 } 
