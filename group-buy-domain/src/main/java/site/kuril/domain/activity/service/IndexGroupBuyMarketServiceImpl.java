@@ -143,6 +143,6 @@ public class IndexGroupBuyMarketServiceImpl implements IIndexGroupBuyMarketServi
                     .allTeamCompleteCount(0)
                     .allTeamUserCount(0)
                     .build();
-        }
+    }
     }
 }
