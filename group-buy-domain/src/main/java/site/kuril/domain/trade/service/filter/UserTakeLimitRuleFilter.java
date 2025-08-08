@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import site.kuril.domain.trade.adapter.repository.ITradeRepository;
 import site.kuril.domain.trade.model.entity.TradeLockRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleFilterBackEntity;
-import site.kuril.domain.trade.service.factory.TradeRuleFilterFactory;
+import site.kuril.domain.trade.service.factory.TradeLockRuleFilterFactory;
 import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
 import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
@@ -15,18 +15,18 @@ import javax.annotation.Resource;
 /**
  * 用户参与次数限制规则过滤器
  * <p>
- * 检查用户参与活动的次数是否超过限制
+ * 检查用户在指定活动中的参与次数是否超过限制
  * </p>
  */
 @Slf4j
 @Service
-public class UserTakeLimitRuleFilter implements ILogicHandler<TradeLockRuleCommandEntity, TradeRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> {
+public class UserTakeLimitRuleFilter implements ILogicHandler<TradeLockRuleCommandEntity, TradeLockRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> {
 
     @Resource
     private ITradeRepository tradeRepository;
 
     @Override
-    public TradeLockRuleFilterBackEntity apply(TradeLockRuleCommandEntity requestParameter, TradeRuleFilterFactory.DynamicContext dynamicContext) throws Exception {
+    public TradeLockRuleFilterBackEntity apply(TradeLockRuleCommandEntity requestParameter, TradeLockRuleFilterFactory.DynamicContext dynamicContext) throws Exception {
         log.info("交易规则过滤-用户参与次数限制校验，用户ID: {} 活动ID: {}", requestParameter.getUserId(), requestParameter.getActivityId());
 
         String userId = requestParameter.getUserId();
@@ -46,9 +46,11 @@ public class UserTakeLimitRuleFilter implements ILogicHandler<TradeLockRuleComma
             throw new AppException(ResponseCode.E0103);
         }
 
-        return TradeLockRuleFilterBackEntity.builder()
-                .userTakeOrderCount(userTakeOrderCount + 1)
-                .build();
+        // 将用户参与次数设置到动态上下文中
+        dynamicContext.setUserTakeOrderCount(userTakeOrderCount + 1);
+
+        // 走到下一个责任链节点
+        return next(requestParameter, dynamicContext);
     }
 
 }

@@ -92,4 +92,29 @@ public interface ITradeRepository {
      */
     int updateNotifyTaskStatusRetry(String teamId);
 
+    /**
+     * 抢占团队库存（无锁化设计）
+     * <p>
+     * 通过Redis缓存进行库存抢占，降低数据库行锁压力
+     * </p>
+     * 
+     * @param teamStockKey 团队库存key
+     * @param recoveryTeamStockKey 恢复库存key
+     * @param target 目标数量
+     * @param validTime 有效时间（分钟）
+     * @return 是否抢占成功
+     */
+    boolean occupyTeamStock(String teamStockKey, String recoveryTeamStockKey, Integer target, Integer validTime);
+
+    /**
+     * 恢复团队库存
+     * <p>
+     * 当发生异常时，记录库存恢复量
+     * </p>
+     * 
+     * @param recoveryTeamStockKey 恢复库存key
+     * @param validTime 有效时间（分钟）
+     */
+    void recoveryTeamStock(String recoveryTeamStockKey, Integer validTime);
+
 }

@@ -6,7 +6,7 @@ import site.kuril.domain.trade.adapter.repository.ITradeRepository;
 import site.kuril.domain.trade.model.entity.GroupBuyActivityEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleFilterBackEntity;
-import site.kuril.domain.trade.service.factory.TradeRuleFilterFactory;
+import site.kuril.domain.trade.service.factory.TradeLockRuleFilterFactory;
 import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
 import site.kuril.types.enums.ActivityStatusEnumVO;
 import site.kuril.types.enums.ResponseCode;
@@ -23,13 +23,13 @@ import java.util.Date;
  */
 @Slf4j
 @Service
-public class ActivityUsabilityRuleFilter implements ILogicHandler<TradeLockRuleCommandEntity, TradeRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> {
+public class ActivityUsabilityRuleFilter implements ILogicHandler<TradeLockRuleCommandEntity, TradeLockRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> {
 
     @Resource
     private ITradeRepository repository;
 
     @Override
-    public TradeLockRuleFilterBackEntity apply(TradeLockRuleCommandEntity requestParameter, TradeRuleFilterFactory.DynamicContext dynamicContext) throws Exception {
+    public TradeLockRuleFilterBackEntity apply(TradeLockRuleCommandEntity requestParameter, TradeLockRuleFilterFactory.DynamicContext dynamicContext) throws Exception {
         log.info("交易规则过滤-活动的可用性校验{} activityId:{}", requestParameter.getUserId(), requestParameter.getActivityId());
 
         // 查询拼团活动

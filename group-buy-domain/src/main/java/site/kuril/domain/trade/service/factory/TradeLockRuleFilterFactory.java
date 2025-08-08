@@ -8,6 +8,7 @@ import site.kuril.domain.trade.model.entity.GroupBuyActivityEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleFilterBackEntity;
 import site.kuril.domain.trade.service.filter.ActivityUsabilityRuleFilter;
+import site.kuril.domain.trade.service.filter.TeamStockOccupyRuleFilter;
 import site.kuril.domain.trade.service.filter.UserTakeLimitRuleFilter;
 import site.kuril.types.design.framework.link.model2.LinkArmory;
 import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
@@ -23,13 +24,21 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class TradeRuleFilterFactory {
+public class TradeLockRuleFilterFactory {
 
-    @Bean("tradeLockRuleFilter")
-    public BusinessLinkedList<TradeLockRuleCommandEntity, DynamicContext, TradeLockRuleFilterBackEntity> tradeRuleFilter(ActivityUsabilityRuleFilter activityUsabilityRuleFilter, UserTakeLimitRuleFilter userTakeLimitRuleFilter) {
+    @Bean("tradeRuleFilter")
+    public BusinessLinkedList<TradeLockRuleCommandEntity, DynamicContext, TradeLockRuleFilterBackEntity> tradeRuleFilter(
+            ActivityUsabilityRuleFilter activityUsabilityRuleFilter,
+            UserTakeLimitRuleFilter userTakeLimitRuleFilter,
+            TeamStockOccupyRuleFilter teamStockOccupyRuleFilter) {
+
         // 组装链
         LinkArmory<TradeLockRuleCommandEntity, DynamicContext, TradeLockRuleFilterBackEntity> linkArmory =
-                new LinkArmory<>("交易锁单规则过滤链", activityUsabilityRuleFilter, userTakeLimitRuleFilter);
+                new LinkArmory<>("交易规则过滤链",
+                        activityUsabilityRuleFilter,
+                        userTakeLimitRuleFilter,
+                        teamStockOccupyRuleFilter);
+
         // 链对象
         return linkArmory.getLogicLink();
     }
@@ -48,6 +57,27 @@ public class TradeRuleFilterFactory {
         
         /** 拼团活动实体 */
         private GroupBuyActivityEntity groupBuyActivity;
+        
+        /** 用户参与次数 */
+        private Integer userTakeOrderCount;
+        
+        /**
+         * 生成团队库存Key
+         * @param teamId 团队ID
+         * @return 团队库存Key
+         */
+        public String generateTeamStockKey(String teamId) {
+            return "team_stock_" + teamId;
+        }
+        
+        /**
+         * 生成恢复团队库存Key
+         * @param teamId 团队ID  
+         * @return 恢复团队库存Key
+         */
+        public String generateRecoveryTeamStockKey(String teamId) {
+            return "recovery_team_stock_" + teamId;
+        }
         
     }
 

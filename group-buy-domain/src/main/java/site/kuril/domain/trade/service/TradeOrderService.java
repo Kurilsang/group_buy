@@ -6,18 +6,16 @@ import site.kuril.domain.trade.model.entity.*;
 import site.kuril.domain.trade.model.valobj.GroupBuyProgressVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import site.kuril.domain.trade.service.factory.TradeRuleFilterFactory;
+import site.kuril.domain.trade.service.factory.TradeLockRuleFilterFactory;
 import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
 
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * 交易订单服务实现
+ * 交易订单服务
  * <p>
- * 负责处理团购交易订单的核心业务逻辑，包括：
- * - 未支付订单查询
- * - 拼团进度追踪
- * - 营销订单锁定与风控过滤
+ * 负责处理营销活动中的订单相关业务逻辑
  * </p>
  */
 @Slf4j
@@ -29,8 +27,8 @@ public class TradeOrderService implements ITradeOrderService {
     private ITradeRepository tradeDataRepository;
 
     /** 交易规则过滤链 */
-    @Resource
-    private BusinessLinkedList<TradeLockRuleCommandEntity, TradeRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> businessRuleChain;
+    @Resource(name = "tradeRuleFilter")
+    private BusinessLinkedList<TradeLockRuleCommandEntity, TradeLockRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> businessRuleChain;
 
     /**
      * 根据外部交易号查询未支付的营销订单
@@ -106,7 +104,7 @@ public class TradeOrderService implements ITradeOrderService {
         
         try {
             // 第一步：执行交易规则过滤检查
-            TradeLockRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId);
+            TradeLockRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId, activityInfo.getTeamId());
 
             // 第二步：获取用户参与次数信息（用于数据库唯一索引约束）
             Integer participationCount = extractUserParticipationCount(riskControlResult);
@@ -121,6 +119,12 @@ public class TradeOrderService implements ITradeOrderService {
             return lockedOrder;
             
         } catch (Exception exception) {
+            // 如果发生异常，需要恢复库存
+            TradeLockRuleFilterBackEntity riskControlResult = executeTradeRuleValidation(customerId, activityId, activityInfo.getTeamId());
+            if (StringUtils.isNotBlank(riskControlResult.getRecoveryTeamStockKey())) {
+                tradeDataRepository.recoveryTeamStock(riskControlResult.getRecoveryTeamStockKey(), activityInfo.getValidTime());
+            }
+            
             log.error("营销优惠支付订单锁定失败 - 客户ID: {}, 活动ID: {}, 异常信息: {}", 
                 customerId, activityId, exception.getMessage(), exception);
             throw exception;
@@ -132,16 +136,23 @@ public class TradeOrderService implements ITradeOrderService {
      * 
      * @param customerId 客户ID
      * @param activityId 活动ID
+     * @param teamId 团队ID
      * @return 规则过滤结果
      * @throws Exception 当规则验证失败时抛出异常
      */
-    private TradeLockRuleFilterBackEntity executeTradeRuleValidation(String customerId, Long activityId) throws Exception {
+    private TradeLockRuleFilterBackEntity executeTradeRuleValidation(String customerId, Long activityId, String teamId) throws Exception {
+        // 获取拼团活动信息
+        GroupBuyActivityEntity groupBuyActivity = tradeDataRepository.queryGroupBuyActivityEntityByActivityId(activityId);
+        
         TradeLockRuleCommandEntity ruleCommand = TradeLockRuleCommandEntity.builder()
                 .activityId(activityId)
                 .userId(customerId)
+                .teamId(teamId)
                 .build();
 
-        TradeRuleFilterFactory.DynamicContext filterContext = new TradeRuleFilterFactory.DynamicContext();
+        TradeLockRuleFilterFactory.DynamicContext filterContext = TradeLockRuleFilterFactory.DynamicContext.builder()
+                .groupBuyActivity(groupBuyActivity)
+                .build();
         
         return businessRuleChain.apply(ruleCommand, filterContext);
     }
