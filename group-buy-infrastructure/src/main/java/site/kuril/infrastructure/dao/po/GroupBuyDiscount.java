@@ -62,4 +62,13 @@ public class GroupBuyDiscount {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 生成Redis缓存键
+     * @param discountId 折扣ID
+     * @return Redis缓存键
+     */
+    public static String cacheRedisKey(String discountId) {
+        return "group_buy_discount_" + discountId;
+    }
 }

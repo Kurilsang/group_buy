@@ -104,4 +104,13 @@ public class GroupBuyActivity {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 生成Redis缓存键
+     * @param activityId 活动ID
+     * @return Redis缓存键
+     */
+    public static String cacheRedisKey(Long activityId) {
+        return "group_buy_activity_" + activityId;
+    }
 }

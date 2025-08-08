@@ -16,6 +16,12 @@ public class DCCService {
     @DCCValue("cutRange:100")
     private String cutRange;
 
+    /**
+     * 缓存开关 0开启、1关闭
+     */
+    @DCCValue("cacheSwitch:0")
+    private String cacheOpenSwitch;
+
     public boolean isDowngradeSwitch() {
 
 
@@ -43,6 +49,13 @@ public class DCCService {
 
         return false;
 
+    }
+
+    /**
+     * 缓存开启开关，0为开启，1为关闭
+     */
+    public boolean isCacheOpenSwitch(){
+        return "0".equals(cacheOpenSwitch);
     }
 
 }

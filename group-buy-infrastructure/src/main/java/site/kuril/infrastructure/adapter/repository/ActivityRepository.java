@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 
 @Repository
-public class ActivityRepository implements IActivityRepository {
+public class ActivityRepository extends AbstractRepository implements IActivityRepository {
 
     @Resource
     private GroupBuyActivityDao groupBuyActivityDao;
@@ -47,24 +47,24 @@ public class ActivityRepository implements IActivityRepository {
     private  ISkuDao skuDao;
 
     @Resource
-    private IRedisService redisService;
-
-    @Resource
-    private DCCService dccService;
-
-    @Resource
     private IGroupBuyOrderDao groupBuyOrderDao;
     @Resource
     private IGroupBuyOrderListDao groupBuyOrderListDao;
 
     @Override
     public GroupBuyActivityDiscountVO queryGroupBuyActivityDiscountVO(Long activityId) {
-        GroupBuyActivity groupBuyActivityRes = groupBuyActivityDao.queryValidGroupBuyActivityId(activityId);
+        // 优先从缓存获取&写缓存，注意如果实现了后台配置，在更新时要更库，删缓存。
+        String groupBuyActivityCacheKey = GroupBuyActivity.cacheRedisKey(activityId);
+        GroupBuyActivity groupBuyActivityRes = getFromCacheOrDb(groupBuyActivityCacheKey, 
+                () -> groupBuyActivityDao.queryValidGroupBuyActivityId(activityId));
         if (null == groupBuyActivityRes) return null;
 
         String discountId = groupBuyActivityRes.getDiscountId();
 
-        GroupBuyDiscount groupBuyDiscountRes = groupBuyDiscountDao.queryGroupBuyActivityDiscountByDiscountId(discountId);
+        // 优先从缓存获取&写缓存
+        String groupBuyDiscountCacheKey = GroupBuyDiscount.cacheRedisKey(discountId);
+        GroupBuyDiscount groupBuyDiscountRes = getFromCacheOrDb(groupBuyDiscountCacheKey,
+                () -> groupBuyDiscountDao.queryGroupBuyActivityDiscountByDiscountId(discountId));
         if (null == groupBuyDiscountRes) return null;
 
         GroupBuyActivityDiscountVO.GroupBuyDiscount groupBuyDiscount = GroupBuyActivityDiscountVO.GroupBuyDiscount.builder()

@@ -47,4 +47,32 @@ public class IIndexGroupBuyMarketServiceTest {
         log.info("测试结果：{}", JSON.toJSONString(trialBalanceEntity));
     }
 
+    /**
+     * 测试缓存和降级功能
+     * 验证缓存处理和降级服务控制
+     */
+    @Test
+    public void test_indexMarketTrial_cache_and_downgrade() throws Exception {
+        MarketProductEntity marketProductEntity = new MarketProductEntity();
+        marketProductEntity.setUserId("dacihua");
+        marketProductEntity.setSource("s01");
+        marketProductEntity.setChannel("c01");
+        marketProductEntity.setGoodsId("9890001");
+        
+        log.info("=== 开始测试缓存和降级功能 ===");
+        
+        // 第一次调用，应该从数据库获取并写入缓存
+        log.info("第一次调用（从数据库获取并写入缓存）");
+        TrialBalanceEntity trialBalanceEntity1 = indexGroupBuyMarketService.indexMarketTrial(marketProductEntity);
+        log.info("请求参数:{}", JSON.toJSONString(marketProductEntity));
+        log.info("第一次调用结果:{}", JSON.toJSONString(trialBalanceEntity1));
+        
+        // 第二次调用，应该从缓存获取
+        log.info("第二次调用（应该从缓存获取）");
+        TrialBalanceEntity trialBalanceEntity2 = indexGroupBuyMarketService.indexMarketTrial(marketProductEntity);
+        log.info("第二次调用结果:{}", JSON.toJSONString(trialBalanceEntity2));
+        
+        log.info("=== 缓存和降级功能测试完成 ===");
+    }
+
 }
