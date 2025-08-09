@@ -10,10 +10,9 @@ import site.kuril.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import site.kuril.domain.activity.service.trial.factory.DefaultActivityStrategyFactory;
 import site.kuril.domain.activity.service.trial.thread.QueryGroupBuyActivityDiscountVOThreadTask;
 import site.kuril.domain.activity.service.trial.thread.QuerySkuVOFromDBThreadTask;
-import site.kuril.domain.activity.service.trial.thread.test;
-import site.kuril.types.design.framework.tree.StrategyHandler;
+import cn.bugstack.wrench.design.framework.tree.StrategyHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
 
@@ -24,7 +23,7 @@ import java.util.concurrent.*;
 
 
 @Slf4j
-@Service
+@Component
 public class MarketNode extends AbstractGroupBuyMarketSupport<MarketProductEntity, DefaultActivityStrategyFactory.DynamicContext, TrialBalanceEntity> {
     @Resource
     private ThreadPoolExecutor threadPoolExecutor;
@@ -55,9 +54,6 @@ public class MarketNode extends AbstractGroupBuyMarketSupport<MarketProductEntit
         context.setGroupBuyActivityDiscountVO(groupBuyActivityDiscountVOFutureTask.get(timeout, TimeUnit.MINUTES));
         context.setSkuVO(skuVOFutureTask.get(timeout, TimeUnit.MINUTES));
 
-        test testTask = new test(repository);
-        FutureTask<SkuVO> testTask1 = new FutureTask<>(testTask);
-        threadPoolExecutor.execute(testTask1);
     }
 
     @Override

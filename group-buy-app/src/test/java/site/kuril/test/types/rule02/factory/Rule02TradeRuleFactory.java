@@ -1,10 +1,11 @@
 package site.kuril.test.types.rule02.factory;
 
+import cn.bugstack.wrench.design.framework.link.model2.LinkArmory;
+import cn.bugstack.wrench.design.framework.link.model2.chain.BusinessLinkedList;
+import org.springframework.boot.actuate.endpoint.web.Link;
 import site.kuril.test.types.rule02.logic.RuleLogic201;
 import site.kuril.test.types.rule02.logic.RuleLogic202;
 import site.kuril.test.types.rule02.logic.XxxResponse;
-import site.kuril.types.design.framework.link.model2.LinkArmory;
-import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

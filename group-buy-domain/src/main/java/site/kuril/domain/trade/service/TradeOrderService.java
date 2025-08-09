@@ -7,7 +7,7 @@ import site.kuril.domain.trade.model.valobj.GroupBuyProgressVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import site.kuril.domain.trade.service.factory.TradeLockRuleFilterFactory;
-import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
+import cn.bugstack.wrench.design.framework.link.model2.chain.BusinessLinkedList;
 
 import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;

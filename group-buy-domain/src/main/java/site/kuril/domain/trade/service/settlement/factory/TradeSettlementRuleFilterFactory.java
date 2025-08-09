@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import site.kuril.domain.trade.model.entity.MarketPayOrderEntity;
 import site.kuril.domain.trade.model.entity.GroupBuyTeamEntity;
@@ -15,8 +16,8 @@ import site.kuril.domain.trade.service.settlement.filter.SCRuleFilter;
 import site.kuril.domain.trade.service.settlement.filter.OutTradeNoRuleFilter;
 import site.kuril.domain.trade.service.settlement.filter.SettableRuleFilter;
 import site.kuril.domain.trade.service.settlement.filter.EndRuleFilter;
-import site.kuril.types.design.framework.link.model2.LinkArmory;
-import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
+import cn.bugstack.wrench.design.framework.link.model2.LinkArmory;
+import cn.bugstack.wrench.design.framework.link.model2.chain.BusinessLinkedList;
 
 /**
  * 交易结算规则过滤器工厂

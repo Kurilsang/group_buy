@@ -10,6 +10,11 @@
     <artifactId>group-buy-infrastructure</artifactId>
 
     <dependencies>
+        <!-- 扳手工程；动态配置中心 -->
+        <dependency>
+            <groupId>cn.bugstack.wrench</groupId>
+            <artifactId>xfg-wrench-starter-dynamic-config-center</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>

@@ -2,13 +2,13 @@ package site.kuril.domain.trade.service.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import site.kuril.domain.trade.adapter.repository.ITradeRepository;
 import site.kuril.domain.trade.model.entity.GroupBuyActivityEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeLockRuleFilterBackEntity;
 import site.kuril.domain.trade.service.factory.TradeLockRuleFilterFactory;
-import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
+import cn.bugstack.wrench.design.framework.link.model2.handler.ILogicHandler;
 import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
 
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * </p>
  */
 @Slf4j
-@Service
+@Component
 public class TeamStockOccupyRuleFilter implements ILogicHandler<TradeLockRuleCommandEntity, TradeLockRuleFilterFactory.DynamicContext, TradeLockRuleFilterBackEntity> {
 
     @Resource

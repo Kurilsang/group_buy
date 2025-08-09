@@ -1,21 +1,21 @@
 package site.kuril.domain.activity.service.trial.node;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import site.kuril.domain.activity.model.entity.MarketProductEntity;
 import site.kuril.domain.activity.model.entity.TrialBalanceEntity;
 import site.kuril.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
 import site.kuril.domain.activity.model.valobj.SkuVO;
 import site.kuril.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import site.kuril.domain.activity.service.trial.factory.DefaultActivityStrategyFactory;
-import site.kuril.types.design.framework.tree.StrategyHandler;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import cn.bugstack.wrench.design.framework.tree.StrategyHandler;
 
 import java.math.BigDecimal;
 
 
 @Slf4j
-@Service
+@Component
 public class EndNode extends AbstractGroupBuyMarketSupport<MarketProductEntity, DefaultActivityStrategyFactory.DynamicContext, TrialBalanceEntity> {
 
     @Override

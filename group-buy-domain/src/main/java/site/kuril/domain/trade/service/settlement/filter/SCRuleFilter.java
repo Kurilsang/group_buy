@@ -1,12 +1,12 @@
 package site.kuril.domain.trade.service.settlement.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import site.kuril.domain.trade.adapter.repository.ITradeRepository;
 import site.kuril.domain.trade.model.entity.TradeSettlementRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeSettlementRuleFilterBackEntity;
 import site.kuril.domain.trade.service.settlement.factory.TradeSettlementRuleFilterFactory;
-import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
+import cn.bugstack.wrench.design.framework.link.model2.handler.ILogicHandler;
 import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
 
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * </p>
  */
 @Slf4j
-@Service
+@Component
 public class SCRuleFilter implements ILogicHandler<TradeSettlementRuleCommandEntity, TradeSettlementRuleFilterFactory.DynamicContext, TradeSettlementRuleFilterBackEntity> {
 
     @Resource

@@ -10,7 +10,7 @@ import site.kuril.domain.activity.model.entity.TrialBalanceEntity;
 import site.kuril.domain.activity.model.valobj.GroupBuyActivityDiscountVO;
 import site.kuril.domain.activity.model.valobj.SkuVO;
 import site.kuril.domain.activity.service.trial.node.RootNode;
-import site.kuril.types.design.framework.tree.StrategyHandler;
+import cn.bugstack.wrench.design.framework.tree.StrategyHandler;
 
 import java.math.BigDecimal;
 

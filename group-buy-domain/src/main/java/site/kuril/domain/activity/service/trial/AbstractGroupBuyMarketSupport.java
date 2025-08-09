@@ -2,7 +2,7 @@ package site.kuril.domain.activity.service.trial;
 
 import site.kuril.domain.activity.adapter.repository.IActivityRepository;
 import site.kuril.domain.activity.service.trial.factory.DefaultActivityStrategyFactory;
-import site.kuril.types.design.framework.tree.AbstractMultiThreadStrategyRouter;
+import cn.bugstack.wrench.design.framework.tree.AbstractMultiThreadStrategyRouter;
 
 import javax.annotation.Resource;
 import java.util.concurrent.ExecutionException;

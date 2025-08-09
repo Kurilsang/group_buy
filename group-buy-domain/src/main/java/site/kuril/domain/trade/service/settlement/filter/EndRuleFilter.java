@@ -1,12 +1,12 @@
 package site.kuril.domain.trade.service.settlement.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import site.kuril.domain.trade.model.entity.GroupBuyTeamEntity;
 import site.kuril.domain.trade.model.entity.TradeSettlementRuleCommandEntity;
 import site.kuril.domain.trade.model.entity.TradeSettlementRuleFilterBackEntity;
 import site.kuril.domain.trade.service.settlement.factory.TradeSettlementRuleFilterFactory;
-import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
+import cn.bugstack.wrench.design.framework.link.model2.handler.ILogicHandler;
 
 /**
  * 结束节点规则过滤器
@@ -15,7 +15,7 @@ import site.kuril.types.design.framework.link.model2.handler.ILogicHandler;
  * </p>
  */
 @Slf4j
-@Service
+@Component
 public class EndRuleFilter implements ILogicHandler<TradeSettlementRuleCommandEntity, TradeSettlementRuleFilterFactory.DynamicContext, TradeSettlementRuleFilterBackEntity> {
 
     @Override

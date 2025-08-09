@@ -10,6 +10,11 @@
     <artifactId>group-buy-domain</artifactId>
 
     <dependencies>
+        <!-- 扳手工程；设计模式框架 -->
+        <dependency>
+            <groupId>cn.bugstack.wrench</groupId>
+            <artifactId>xfg-wrench-starter-design-framework</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -1,8 +1,8 @@
 package site.kuril.test.types;
 
+import cn.bugstack.wrench.design.framework.link.model2.chain.BusinessLinkedList;
 import site.kuril.test.types.rule02.factory.Rule02TradeRuleFactory;
 import site.kuril.test.types.rule02.logic.XxxResponse;
-import site.kuril.types.design.framework.link.model2.chain.BusinessLinkedList;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

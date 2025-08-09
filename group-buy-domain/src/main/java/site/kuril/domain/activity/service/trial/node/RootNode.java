@@ -3,19 +3,19 @@ package site.kuril.domain.activity.service.trial.node;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import site.kuril.domain.activity.model.entity.MarketProductEntity;
 import site.kuril.domain.activity.model.entity.TrialBalanceEntity;
 import site.kuril.domain.activity.service.trial.AbstractGroupBuyMarketSupport;
 import site.kuril.domain.activity.service.trial.factory.DefaultActivityStrategyFactory;
-import site.kuril.types.design.framework.tree.StrategyHandler;
+import cn.bugstack.wrench.design.framework.tree.StrategyHandler;
 import site.kuril.types.enums.ResponseCode;
 import site.kuril.types.exception.AppException;
 
 import javax.annotation.Resource;
 
 @Slf4j
-@Service
+@Component
 public class RootNode extends AbstractGroupBuyMarketSupport<MarketProductEntity, DefaultActivityStrategyFactory.DynamicContext, TrialBalanceEntity> {
 
     @Resource
