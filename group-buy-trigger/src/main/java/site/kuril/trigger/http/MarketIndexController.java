@@ -1,5 +1,6 @@
 package site.kuril.trigger.http;
 
+import cn.bugstack.wrench.rate.limiter.types.annotations.RateLimiterAccessInterceptor;
 import site.kuril.api.IMarketIndexService;
 import site.kuril.api.dto.GoodsMarketRequestDTO;
 import site.kuril.api.dto.GoodsMarketResponseDTO;
@@ -30,6 +31,8 @@ public class MarketIndexController implements IMarketIndexService {
     @Resource
     private IIndexGroupBuyMarketService indexGroupBuyMarketService;
 
+
+    @RateLimiterAccessInterceptor(key = "userId", fallbackMethod = "queryGroupBuyMarketConfigFallBack", permitsPerSecond = 1.0d, blacklistCount = 1)
     @RequestMapping(value = "query_group_buy_market_config", method = RequestMethod.POST)
     @Override
     public Response<GoodsMarketResponseDTO> queryGroupBuyMarketConfig(@RequestBody GoodsMarketRequestDTO goodsMarketRequestDTO) {
@@ -113,6 +116,14 @@ public class MarketIndexController implements IMarketIndexService {
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();
         }
+    }
+
+    public Response<GoodsMarketResponseDTO> queryGroupBuyMarketConfigFallBack(@RequestBody GoodsMarketRequestDTO requestDTO) {
+        log.error("查询拼团营销配置限流:{}", requestDTO.getUserId());
+        return Response.<GoodsMarketResponseDTO>builder()
+                .code(ResponseCode.RATE_LIMITER.getCode())
+                .info(ResponseCode.RATE_LIMITER.getInfo())
+                .build();
     }
 
 } 

@@ -2,12 +2,15 @@ package site.kuril.infrastructure.dcc;
 
 import cn.bugstack.wrench.dynamic.config.center.types.annotations.DCCValue;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class DCCService {
 
+    private static final Logger log = LoggerFactory.getLogger(DCCService.class);
     /**
      * 降级开关 0关闭、1开启
      */
@@ -25,7 +28,7 @@ public class DCCService {
 
     public boolean isDowngradeSwitch() {
 
-
+        log.info("isDowngradeSwitch:{}", downgradeSwitch);
         return downgradeSwitch != null && "1".equals(downgradeSwitch); // downgradeSwitch != null && "1".equals(downgradeSwitch);
     }
 

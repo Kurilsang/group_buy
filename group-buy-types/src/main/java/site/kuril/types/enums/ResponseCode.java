@@ -30,6 +30,7 @@ public enum ResponseCode {
     E0105("E0105", "渠道黑名单拦截"),
     E0106("E0106", "订单交易时间不在拼团有效时间范围内"),
     UPDATE_ZERO("E0107", "更新数据异常，影响行数为0"),
+    RATE_LIMITER("E0108", "请求过于频繁，已被限流"),
     ;
 
     private String code;
